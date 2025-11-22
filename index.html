@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<title>¡Cuenta tus Nodos! - Cuestionario de Progreso</title>
+<style>
+/* ---------------------- CSS GENERAL Y ESTRUCTURA DE PÁGINA ------------------------- */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        background: linear-gradient(135deg, #8bc34a 0%, #4fc3f7 100%); 
+        text-align: center;
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        overflow-x: hidden; 
+    }
+
+    .container {
+        width: 90%; 
+        max-width: 750px; 
+        min-height: 500px;
+        margin: 5px auto; 
+        background: rgba(255, 255, 255, 0.95); 
+        padding: 25px; 
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        color: #333;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 8px;
+        background: linear-gradient(to right, #8bc34a, #4fc3f7);
+        z-index: 10;
+    }
+
+    h1 { 
+        font-size: 2.2em; 
+        margin-bottom: 5px; 
+        color: #00897b; 
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .subtitle { 
+        margin-bottom: 15px; 
+        font-size: 1.2em; 
+        color: #388e3c; 
+        font-weight: 500;
+    }
+    
+    /* Contadores y Mensajes */
+    #info { 
+        margin: 5px 0; 
+        padding: 12px; 
+        font-size: 16px; 
+        background: #e3f2fd; 
+        border: 2px solid #2196f3;
+        border-radius: 10px;
+        box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+    }
+
+    #instructions { 
+        margin: 15px 0; 
+        padding: 15px; 
+        font-size: 16px; 
+        background: #fff9c4; 
+        border: 2px dashed #fdd835;
+        border-radius: 10px;
+        line-height: 1.5;
+    }
+
+    /* ---------------------- SECCIÓN PREGUNTAS Y EMOJI ------------------------- */
+    #questionAndEmoji {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 25px; 
+        margin: 20px auto;
+        padding: 20px;
+        border: 3px solid #00897b;
+        background-color: #f5fdff; 
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        flex-wrap: wrap;
+        transition: all 0.3s ease;
+    }
+
+    #questionBox { 
+        flex: 3; 
+        padding: 10px; 
+        text-align: left;
+        min-width: 280px;
+    }
+
+    #emojiContainer { 
+        flex: 1; 
+        min-width: 120px;
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: center; 
+        position: relative; 
+        padding: 10px; 
+    }
+    
+    #questionText { 
+        margin-bottom: 20px; 
+        font-size: 1.3em; 
+        color: #333; 
+        line-height: 1.4;
+    }
+
+    /* Estilos de Botones de Opción */
+    #options { 
+        display: flex; 
+        flex-wrap: wrap; 
+        justify-content: flex-start; 
+        gap: 12px; 
+    }
+    
+    #options button {
+        flex: 1 1 calc(50% - 12px);
+        min-width: 200px;
+        padding: 12px 18px;
+        font-size: 15px;
+        background: #ffb300; 
+        color: #333; 
+        font-weight: bold; 
+        border: 2px solid #fb8c00; 
+        border-radius: 12px; 
+        box-shadow: 0 4px 0 #e65100;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+    
+    #options button:hover { 
+        background: #ffa000; 
+        transform: translateY(-2px);
+        box-shadow: 0 6px 0 #e65100;
+    }
+    
+    #options button:active { 
+        box-shadow: 0 1px 0 #e65100; 
+        transform: translateY(3px); 
+    }
+
+    /* ---------------------- ESTILOS DEL EMOJI ------------------------- */
+    .emoji {
+        width: 120px; 
+        height: 120px; 
+        border-radius: 50%; 
+        background-color: #ffeb3b; 
+        border: 5px solid #fbc02d;
+        position: relative; 
+        overflow: hidden; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: center;
+        transition: all 0.5s ease;
+    }
+    
+    /* Ojos */
+    .emoji::before { 
+        content: ''; 
+        position: absolute; 
+        width: 20px; 
+        height: 20px; 
+        background-color: #333; 
+        border-radius: 50%; 
+        top: 35px; 
+        left: 25px; 
+        box-shadow: 70px 0 #333; 
+        z-index: 2; 
+    }
+    
+    /* Boca feliz */
+    .happy-emoji::after { 
+        content: ''; 
+        position: absolute; 
+        width: 60px; 
+        height: 30px; 
+        border: 5px solid #333; 
+        border-top: none; 
+        border-bottom-left-radius: 40px; 
+        border-bottom-right-radius: 40px; 
+        bottom: 30px; 
+        z-index: 2; 
+    }
+    
+    /* Estilo para Carita Triste */
+    .sad-emoji { 
+        background-color: #ff7043; 
+        border-color: #d84315; 
+    }
+    
+    /* Boca triste */
+    .sad-emoji::after { 
+        content: ''; 
+        position: absolute; 
+        width: 60px; 
+        height: 30px; 
+        border: 5px solid #333; 
+        border-bottom: none; 
+        border-top-left-radius: 40px; 
+        border-top-right-radius: 40px; 
+        bottom: 30px; 
+        z-index: 2; 
+    }
+
+    /* Relleno de Progreso */
+    .emoji-fill { 
+        position: absolute; 
+        bottom: 0; 
+        left: 0; 
+        width: 100%; 
+        background: linear-gradient(to top, #aed581, #8bc34a);
+        transition: height 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        z-index: 1; 
+    }
+    
+    .sad-emoji .emoji-fill { 
+        background: linear-gradient(to top, #ef5350, #e53935); 
+    } 
+
+    /* Mensaje del emoji */
+    #emojiMessage {
+        color: #333; 
+        font-weight: bold; 
+        margin-top: 10px; 
+        font-size: 1.1em;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    /* Botón de Reinicio */
+    #resetBtn {
+        padding: 14px 30px; 
+        margin-top: 20px; 
+        font-size: 16px; 
+        font-weight: bold;
+        background: linear-gradient(to right, #00897b, #00acc1); 
+        color: white; 
+        border: none; 
+        border-radius: 10px; 
+        box-shadow: 0 4px 0 #006064; 
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    #resetBtn:hover { 
+        transform: translateY(-2px);
+        box-shadow: 0 6px 0 #006064;
+    }
+    
+    #resetBtn:active { 
+        transform: translateY(2px);
+        box-shadow: 0 2px 0 #006064;
+    }
+
+    /* Efectos de confeti */
+    .confetti {
+        position: absolute;
+        width: 10px;
+        height: 20px;
+        background: #f00;
+        top: 0;
+        opacity: 0;
+        z-index: 5;
+    }
+
+    /* Barra de progreso adicional */
+    .progress-bar {
+        width: 100%;
+        height: 12px;
+        background-color: #e0e0e0;
+        border-radius: 6px;
+        margin: 15px 0;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(to right, #8bc34a, #4fc3f7);
+        border-radius: 6px;
+        width: 0%;
+        transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Media Queries (Ajuste para móviles) */
+    @media (max-width: 600px) {
+        .container { padding: 20px; }
+        h1 { font-size: 1.8em; }
+        #questionAndEmoji { 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 20px; 
+            padding: 15px;
+        }
+        #questionBox { 
+            min-width: unset; 
+            text-align: center; 
+            width: 100%;
+        }
+        #options { justify-content: center; }
+        #options button {
+            flex: 1 1 100%;
+        }
+        .emoji { width: 100px; height: 100px; }
+        .emoji::before { 
+            width: 16px; 
+            height: 16px; 
+            top: 30px; 
+            left: 20px; 
+            box-shadow: 60px 0 #333; 
+        }
+        .happy-emoji::after, .sad-emoji::after {
+            width: 50px;
+            height: 25px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>¡Cuenta tus Nodos! 🧠</h1>
+    <div class="subtitle">Domina los Sistemas Distribuidos - Responde 8 preguntas correctamente</div>
+    
+    <div class="progress-bar">
+        <div id="progressFill" class="progress-fill"></div>
+    </div>
+    
+    <div id="info">
+        <div>Preguntas correctas: <span id="correctCount">0</span>/8</div>
+        <div>Progreso: <span id="progressPercent">0</span>%</div>
+    </div>
+    
+    <div id="instructions">
+        ¡Responde correctamente las 8 preguntas para llenar la barra de progreso y demostrar tu conocimiento en Sistemas Distribuidos!
+    </div>
+
+    <div id="questionAndEmoji">
+        <div id="questionBox">
+            <h3 id="questionText">Responde la pregunta para comenzar tu progreso.</h3>
+            <div id="options"></div>
+        </div>
+        <div id="emojiContainer">
+            <div id="progressEmoji" class="emoji happy-emoji">
+                <div id="emojiFill" class="emoji-fill" style="height: 0%;"></div>
+            </div>
+            <p id="emojiMessage">Progreso: 0%</p>
+        </div>
+    </div>
+    <button id="resetBtn" onclick="resetGame()">Reiniciar Cuestionario</button>
+</div>
+
+<script>
+// ---------------------- VARIABLES Y PREGUNTAS -------------------------
+const preguntas = [
+    { 
+        q: "1. ¿Cuál es una desventaja clave de los SD con respecto a los centralizados?", 
+        options: ["Mayor confiabilidad", "Mayor flexibilidad", "Mayor complejidad de gestión"], 
+        correct: 2 
+    },
+    { 
+        q: "2. ¿Qué ventaja se relaciona con la capacidad de un SD de crecer añadiendo más nodos?", 
+        options: ["Fiabilidad", "Concurrencia", "Escalabilidad"], 
+        correct: 2 
+    },
+    { 
+        q: "3. ¿Qué tipo de transparencia oculta que un recurso se encuentre replicado (copiado) en varios lugares del sistema?", 
+        options: ["Transparencia de acceso", "Transparencia de replicación", "Transparencia de migración"], 
+        correct: 1 
+    },
+    { 
+        q: "4. ¿Qué ocurre en un SD cuando una máquina falla, gracias a la distribución de la carga?", 
+        options: ["Falla total del sistema", "El sistema sobrevive como un todo (mayor confiabilidad)", "El rendimiento se duplica"], 
+        correct: 1 
+    },
+    { 
+        q: "5. ¿Qué arquitectura de SD divide una aplicación en servicios pequeños e implementables independientemente?", 
+        options: ["Monolítica", "Cliente-Servidor clásico", "Microservicios"], 
+        correct: 2 
+    },
+    { 
+        q: "6. ¿Cuál es un protocolo de comunicación fundamental en los sistemas distribuidos (capa de transporte)?", 
+        options: ["JPG", "BIOS", "TCP/IP"], 
+        correct: 2 
+    },
+    { 
+        q: "7. ¿Qué es la disponibilidad en un sistema distribuido?", 
+        options: ["Capacidad de estar operativo y accesible al usuario", "Capacidad de añadir más procesadores", "Capacidad de compartir recursos"], 
+        correct: 0 
+    },
+    { 
+        q: "8. ¿Qué capa de software se describe como la intermedia entre las aplicaciones y los recursos, facilitando la comunicación en un SD?", 
+        options: ["Sistema Operativo", "Hardware", "Middleware"], 
+        correct: 2 
+    }
+];
+
+let correctAnswers = 0;
+let preguntaActual = 0;
+let totalPreguntas = preguntas.length;
+let gameCompleted = false;
+
+// ---------------------- LÓGICA DE PROGRESO Y EMOJI -------------------------
+
+function updateProgress() {
+    const progress = (correctAnswers / totalPreguntas) * 100;
+    const emojiFill = document.getElementById("emojiFill");
+    const progressFill = document.getElementById("progressFill");
+    const progressEmoji = document.getElementById("progressEmoji");
+    const emojiMessage = document.getElementById("emojiMessage");
+    const correctCountDisplay = document.getElementById("correctCount");
+    const progressPercent = document.getElementById("progressPercent");
+
+    // Actualizar contadores
+    if (correctCountDisplay) correctCountDisplay.textContent = correctAnswers;
+    if (progressPercent) progressPercent.textContent = Math.round(progress);
+    
+    // Actualizar barras de progreso
+    emojiFill.style.height = `${progress}%`;
+    progressFill.style.width = `${progress}%`;
+    
+    // Actualizar mensaje
+    emojiMessage.textContent = `Progreso: ${Math.round(progress)}%`;
+
+    if (gameCompleted) {
+        if (correctAnswers === totalPreguntas) {
+            // Victoria: Carita Feliz y 100% verde
+            progressEmoji.classList.remove('sad-emoji');
+            progressEmoji.classList.add('happy-emoji');
+            emojiFill.style.backgroundColor = '#8bc34a';
+            emojiMessage.textContent = '¡GANASTE! 🎉';
+            emojiMessage.style.color = '#388e3c';
+            emojiMessage.style.fontWeight = 'bold';
+            createConfetti();
+            setTimeout(() => {
+                alert("🎉 ¡Felicidades! Completaste el cuestionario al 100%. Eres un experto en Sistemas Distribuidos.");
+            }, 500);
+        } else {
+            // Derrota: Carita Triste y 100% rojo
+            progressEmoji.classList.remove('happy-emoji');
+            progressEmoji.classList.add('sad-emoji');
+            emojiFill.style.backgroundColor = '#e53935';
+            emojiMessage.textContent = 'PERDISTE 😞';
+            emojiMessage.style.color = '#c62828';
+            emojiMessage.style.fontWeight = 'bold';
+            setTimeout(() => {
+                alert(`❌ Fin del juego. Respondiste ${correctAnswers} de ${totalPreguntas} correctamente. ¡Sigue practicando!`);
+            }, 500);
+        }
+    } else {
+        // Durante el juego, mantener carita feliz
+        progressEmoji.classList.remove('sad-emoji');
+        progressEmoji.classList.add('happy-emoji');
+        emojiFill.style.background = 'linear-gradient(to top, #aed581, #8bc34a)';
+        emojiMessage.style.color = '#333';
+    }
+}
+
+function mostrarPregunta() {
+    const qBox = document.getElementById("questionBox");
+
+    if (preguntaActual >= totalPreguntas) {
+        // Si ya no hay más preguntas, el juego termina aquí
+        gameCompleted = true;
+        updateProgress();
+        qBox.innerHTML = '<h3 id="questionText">Cuestionario finalizado. ¡Revisa tu progreso!</h3>';
+        return;
+    }
+
+    const p = preguntas[preguntaActual]; 
+    document.getElementById("questionText").textContent = p.q;
+
+    const qOptions = document.getElementById("options");
+    qOptions.innerHTML = "";
+
+    p.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.onclick = () => verificarRespuesta(idx);
+        qOptions.appendChild(btn);
+    });
+}
+
+function verificarRespuesta(idx) {
+    const p = preguntas[preguntaActual];
+    const isCorrect = (idx === p.correct);
+    
+    if (isCorrect) {
+        // Efecto visual para respuesta correcta
+        document.getElementById("questionAndEmoji").style.borderColor = "#4caf50";
+        document.getElementById("questionAndEmoji").style.boxShadow = "0 5px 15px rgba(76, 175, 80, 0.3)";
+        
+        setTimeout(() => {
+            alert("✔️ ¡Correcto!");
+            correctAnswers++;
+            
+            // Mover a la siguiente pregunta
+            preguntaActual++;
+            
+            // Actualizar el progreso y mostrar la siguiente pregunta
+            updateProgress(); 
+            mostrarPregunta();
+            
+            // Restablecer estilos
+            document.getElementById("questionAndEmoji").style.borderColor = "#00897b";
+            document.getElementById("questionAndEmoji").style.boxShadow = "0 5px 15px rgba(0,0,0,0.1)";
+        }, 300);
+        
+    } else {
+        // Efecto visual para respuesta incorrecta
+        document.getElementById("questionAndEmoji").style.borderColor = "#f44336";
+        document.getElementById("questionAndEmoji").style.boxShadow = "0 5px 15px rgba(244, 67, 54, 0.3)";
+        
+        setTimeout(() => {
+            alert("❌ Incorrecto. Pasando a la siguiente pregunta.");
+            
+            // Mover a la siguiente pregunta incluso si la respuesta es incorrecta
+            preguntaActual++;
+            
+            // Actualizar el progreso y mostrar la siguiente pregunta
+            updateProgress(); 
+            mostrarPregunta();
+            
+            // Restablecer estilos
+            document.getElementById("questionAndEmoji").style.borderColor = "#00897b";
+            document.getElementById("questionAndEmoji").style.boxShadow = "0 5px 15px rgba(0,0,0,0.1)";
+        }, 300);
+    }
+}
+
+function createConfetti() {
+    const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4CAF50'];
+    const container = document.querySelector('.container');
+    
+    for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+        container.appendChild(confetti);
+        
+        // Animación
+        const animation = confetti.animate([
+            { top: '0%', opacity: 1 },
+            { top: '100%', opacity: 0 }
+        ], {
+            duration: 1000 + Math.random() * 2000,
+            delay: Math.random() * 500
+        });
+        
+        animation.onfinish = () => {
+            confetti.remove();
+        };
+    }
+}
+
+function resetGame() {
+    correctAnswers = 0;
+    preguntaActual = 0;
+    gameCompleted = false;
+    
+    // Restablecer estilos
+    document.getElementById("questionAndEmoji").style.borderColor = "#00897b";
+    document.getElementById("questionAndEmoji").style.boxShadow = "0 5px 15px rgba(0,0,0,0.1)";
+    
+    mostrarPregunta();
+    updateProgress();
+}
+
+// Inicializar el juego
+window.onload = function() {
+    mostrarPregunta();
+    updateProgress();
+};
+</script>
+
+</body>
+</html>
